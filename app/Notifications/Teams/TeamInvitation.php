@@ -27,7 +27,7 @@ class TeamInvitation extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return ['mail'];
+        return $notifiable instanceof \App\Models\User ? ['mail', 'database'] : ['mail'];
     }
 
     /**
@@ -44,7 +44,7 @@ class TeamInvitation extends Notification implements ShouldQueue
                 'inviterName' => $inviter->name,
                 'teamName' => $team->name,
             ]))
-            ->action(__('Accept invitation'), url("/invitations/{$this->invitation->code}/accept"));
+            ->action(__('Accept invitation'), url("/invitations/{$this->invitation->code}"));
     }
 
     /**
@@ -54,11 +54,20 @@ class TeamInvitation extends Notification implements ShouldQueue
      */
     public function toArray(object $notifiable): array
     {
+        $team = $this->invitation->team;
+        $inviter = $this->invitation->inviter;
+
         return [
             'invitation_id' => $this->invitation->id,
             'team_id' => $this->invitation->team_id,
-            'team_name' => $this->invitation->team->name,
+            'team_name' => $team->name,
             'role' => $this->invitation->role->value,
+            'title' => __('Workspace Invitation'),
+            'body' => __(':inviterName has invited you to join the :teamName team.', [
+                'inviterName' => $inviter->name,
+                'teamName' => $team->name,
+            ]),
+            'action_url' => route('invitations.show', ['invitation' => $this->invitation->code]),
         ];
     }
 }
