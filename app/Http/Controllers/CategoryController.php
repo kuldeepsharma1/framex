@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Enums\TeamRole;
+use App\Models\Blog;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
@@ -22,8 +23,7 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $role = Auth::user()->teamRole(Auth::user()->currentTeam);
-        abort_unless($role === TeamRole::Owner || $role === TeamRole::Admin, 403);
+        Gate::authorize('create', Blog::class);
 
         $validated = $request->validate([
             'name'        => 'required|string|max:100',
@@ -41,8 +41,7 @@ class CategoryController extends Controller
     // Route model binding uses {category:slug}
     public function update(Request $request, $current_team, Category $category)
     {
-        $role = Auth::user()->teamRole(Auth::user()->currentTeam);
-        abort_unless($role === TeamRole::Owner || $role === TeamRole::Admin, 403);
+        Gate::authorize('create', Blog::class);
 
         $validated = $request->validate([
             'name'        => 'required|string|max:100',
@@ -62,8 +61,7 @@ class CategoryController extends Controller
 
     public function destroy($current_team, Category $category)
     {
-        $role = Auth::user()->teamRole(Auth::user()->currentTeam);
-        abort_unless($role === TeamRole::Owner || $role === TeamRole::Admin, 403);
+        Gate::authorize('create', Blog::class);
 
         $category->delete();
 

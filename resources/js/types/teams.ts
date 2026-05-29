@@ -17,6 +17,7 @@ export type TeamMember = {
     avatar?: string | null;
     role: TeamRole;
     role_label: string;
+    permissions?: Record<string, boolean>;
 };
 
 export type TeamInvitation = {
@@ -35,6 +36,7 @@ export type TeamPermissions = {
     canRemoveMember: boolean;
     canCreateInvitation: boolean;
     canCancelInvitation: boolean;
+    isOwner: boolean;
 };
 
 export type RoleOption = {

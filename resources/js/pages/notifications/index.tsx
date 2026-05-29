@@ -45,28 +45,28 @@ export default function NotificationsIndex({ notifications }: Props) {
                                         className={cn(
                                             'flex items-start gap-4 rounded-xl border p-4 transition-all duration-200 hover:shadow-xs',
                                             n.read_at
-                                                ? 'bg-card opacity-70'
+                                                ? 'bg-card border-border/50 opacity-60 dark:opacity-50'
                                                 : (isInvitation
-                                                    ? 'border-amber-500/20 bg-amber-500/2'
-                                                    : 'border-primary/10 bg-primary/2')
+                                                    ? 'border-amber-500/30 bg-amber-500/5 dark:bg-amber-500/10'
+                                                    : 'border-primary/20 bg-primary/5 dark:bg-primary/10')
                                         )}
                                     >
                                         <div className={cn(
                                             'mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-lg',
                                             isInvitation
-                                                ? (n.read_at ? 'bg-amber-100/50 dark:bg-amber-950/20 text-amber-600 dark:text-amber-400' : 'bg-amber-500/10 text-amber-500')
-                                                : (n.read_at ? 'bg-muted' : 'bg-primary/10')
+                                                ? (n.read_at ? 'bg-amber-100/30 dark:bg-amber-950/10 text-amber-600/60 dark:text-amber-500/50' : 'bg-amber-500/10 text-amber-500')
+                                                : (n.read_at ? 'bg-muted text-muted-foreground/60' : 'bg-primary/10 text-primary')
                                         )}>
                                             {isInvitation ? (
                                                 <UserPlus className="h-4 w-4" />
                                             ) : (
-                                                <Bell className={cn('h-4 w-4', n.read_at ? 'text-muted-foreground' : 'text-primary')} />
+                                                <Bell className={cn('h-4 w-4', n.read_at ? 'text-muted-foreground/60' : 'text-primary')} />
                                             )}
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <div className="flex items-center gap-2">
-                                                <h3 className="text-sm font-medium">{n.title}</h3>
-                                                {!n.read_at && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+                                                <h3 className={cn('text-sm font-medium', n.read_at ? 'text-foreground/75' : 'text-foreground')}>{n.title}</h3>
+                                                {!n.read_at && <span className={cn('h-1.5 w-1.5 rounded-full', isInvitation ? 'bg-amber-500' : 'bg-primary')} />}
                                             </div>
                                             {n.body && <p className="mt-0.5 text-sm text-muted-foreground">{n.body}</p>}
                                             {n.action_url && (

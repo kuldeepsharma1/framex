@@ -63,6 +63,11 @@ class TeamController extends Controller
                 'avatar' => $member->avatar ?? null,
                 'role' => $member->pivot->role->value,
                 'role_label' => $member->pivot->role->label(),
+                'permissions' => collect(\App\Enums\TeamPermission::cases())
+                    ->mapWithKeys(fn ($permission) => [
+                        $permission->value => $member->hasTeamPermission($team, $permission)
+                    ])
+                    ->toArray(),
             ]),
             'invitations' => $team->invitations()
                 ->whereNull('accepted_at')
@@ -76,6 +81,43 @@ class TeamController extends Controller
                 ]),
             'permissions' => $user->toTeamPermissions($team),
             'availableRoles' => TeamRole::assignable(),
+            'manageablePermissions' => [
+                [
+                    'value' => 'blog:create',
+                    'label' => __('Create Blogs'),
+                    'description' => __('Allow member to create new blog posts.'),
+                ],
+                [
+                    'value' => 'blog:update',
+                    'label' => __('Update Blogs'),
+                    'description' => __('Allow member to update any blog posts.'),
+                ],
+                [
+                    'value' => 'blog:delete',
+                    'label' => __('Delete Blogs'),
+                    'description' => __('Allow member to delete blog posts.'),
+                ],
+                [
+                    'value' => 'team:update',
+                    'label' => __('Update Team'),
+                    'description' => __('Allow member to update team name and settings.'),
+                ],
+                [
+                    'value' => 'member:add',
+                    'label' => __('Add Members'),
+                    'description' => __('Allow member to add new members directly.'),
+                ],
+                [
+                    'value' => 'invitation:create',
+                    'label' => __('Invite Members'),
+                    'description' => __('Allow member to send email invitations to join the team.'),
+                ],
+                [
+                    'value' => 'invitation:cancel',
+                    'label' => __('Cancel Invitations'),
+                    'description' => __('Allow member to cancel pending team invitations.'),
+                ],
+            ],
         ]);
     }
 

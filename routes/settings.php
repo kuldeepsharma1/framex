@@ -42,6 +42,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('settings/teams/{team}/switch', [TeamController::class, 'switch'])->name('teams.switch');
 
         Route::patch('settings/teams/{team}/members/{user}', [TeamMemberController::class, 'update'])->name('teams.members.update');
+        Route::put('settings/teams/{team}/members/{user}/permissions', [TeamMemberController::class, 'updatePermissions'])->name('teams.members.permissions.update');
         Route::delete('settings/teams/{team}/members/{user}', [TeamMemberController::class, 'destroy'])->name('teams.members.destroy');
 
         Route::post('settings/teams/{team}/invitations', [TeamInvitationController::class, 'store'])->name('teams.invitations.store');

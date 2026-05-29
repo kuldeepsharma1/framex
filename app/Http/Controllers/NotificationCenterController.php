@@ -19,7 +19,7 @@ class NotificationCenterController extends Controller
             ->limit(30)
             ->get();
 
-        $dbNotifications = $dbNotificationsCollection->map(fn ($notification) => [
+        $dbNotifications = $dbNotificationsCollection->toBase()->map(fn ($notification) => [
             'id' => $notification->id,
             'title' => $notification->data['title'] ?? 'Notification',
             'body' => $notification->data['body'] ?? '',
@@ -41,6 +41,7 @@ class NotificationCenterController extends Controller
             ->whereNotIn('id', $dbNotificationInvitationIds)
             ->with(['team', 'inviter'])
             ->get()
+            ->toBase()
             ->map(fn ($invitation) => [
                 'id' => 'invitation-' . $invitation->id,
                 'title' => __('Workspace Invitation'),

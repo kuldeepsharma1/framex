@@ -4,7 +4,7 @@ namespace App\Policies;
 
 use App\Models\Blog;
 use App\Models\User;
-use App\Enums\TeamRole;
+use App\Enums\TeamPermission;
 
 class BlogPolicy
 {
@@ -22,7 +22,10 @@ class BlogPolicy
      */
     public function create(User $user): bool
     {
-        return $user->current_team_id !== null;
+        $team = $user->currentTeam;
+
+        return $team && ($user->hasTeamPermission($team, TeamPermission::CreateBlog)
+            || $user->hasTeamPermission($team, TeamPermission::ManageBlogs));
     }
 
     /**
@@ -36,12 +39,9 @@ class BlogPolicy
             return false;
         }
 
-        $role = $user->teamRole($team);
-        if ($role === TeamRole::Owner || $role === TeamRole::Admin) {
-            return true;
-        }
-
-        return $blog->user_id === $user->id;
+        return $user->hasTeamPermission($team, TeamPermission::UpdateBlog)
+            || $user->hasTeamPermission($team, TeamPermission::ManageBlogs)
+            || $blog->user_id === $user->id;
     }
 
     /**
@@ -50,15 +50,13 @@ class BlogPolicy
     public function delete(User $user, Blog $blog): bool
     {
         $team = $user->currentTeam;
+
         if (!$team || $blog->team_id !== $team->id) {
             return false;
         }
 
-        $role = $user->teamRole($team);
-        if ($role === TeamRole::Owner || $role === TeamRole::Admin) {
-            return true;
-        }
-
-        return $blog->user_id === $user->id;
+        return $user->hasTeamPermission($team, TeamPermission::DeleteBlog)
+            || $user->hasTeamPermission($team, TeamPermission::ManageBlogs)
+            || $blog->user_id === $user->id;
     }
 }

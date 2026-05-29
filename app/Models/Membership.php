@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-#[Fillable(['team_id', 'user_id', 'role'])]
+#[Fillable(['team_id', 'user_id', 'role', 'permissions'])]
 class Membership extends Pivot
 {
      use LogsActivity;
@@ -82,6 +82,7 @@ class Membership extends Pivot
     {
         return [
             'role' => TeamRole::class,
+            'permissions' => 'array',
         ];
     }
 }
