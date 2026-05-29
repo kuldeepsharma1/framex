@@ -2,7 +2,7 @@
 
 A modern full-stack web application built with **Laravel 13**, **React**, **TypeScript**, and **Inertia.js**. FrameX provides comprehensive team management, user authentication, billing integration, and real-time collaboration features.
 
-## 🎯 Features
+##  Features
 
 ### Core Features
 - **User Authentication** - Secure authentication with two-factor authentication (2FA) support
