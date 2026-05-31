@@ -10,10 +10,17 @@
 @media only screen and (max-width: 600px) {
 .inner-body {
 width: 100% !important;
+border-radius: 0 !important;
+border: none !important;
+box-shadow: none !important;
 }
 
 .footer {
 width: 100% !important;
+}
+
+.content-cell {
+padding: 32px !important;
 }
 }
 
@@ -36,7 +43,7 @@ width: 100% !important;
 <!-- Email Body -->
 <tr>
 <td class="body" width="100%" cellpadding="0" cellspacing="0" style="border: hidden !important;">
-<table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
+<table class="inner-body" align="center" width="600" cellpadding="0" cellspacing="0" role="presentation">
 <!-- Body content -->
 <tr>
 <td class="content-cell">
