@@ -15,7 +15,7 @@ class TeamInvitation extends Notification implements ShouldQueue
     /**
      * Create a new notification instance.
      */
-    public function __construct(public TeamInvitationModel $invitation)
+    public function __construct(public TeamInvitationModel $invitation, public bool $sendEmail = true)
     {
         //
     }
@@ -27,7 +27,16 @@ class TeamInvitation extends Notification implements ShouldQueue
      */
     public function via(object $notifiable): array
     {
-        return $notifiable instanceof \App\Models\User ? ['mail', 'database'] : ['mail'];
+        $channels = [];
+        if ($notifiable instanceof \App\Models\User) {
+            $channels[] = 'database';
+        }
+
+        if ($this->sendEmail) {
+            $channels[] = 'mail';
+        }
+
+        return $channels;
     }
 
     /**

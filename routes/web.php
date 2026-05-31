@@ -75,9 +75,29 @@ Route::prefix('{current_team}')
     });
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('invitations/{invitation}', [TeamInvitationController::class, 'show'])->name('invitations.show');
-    Route::post('invitations/{invitation}/accept', [TeamInvitationController::class, 'accept'])->name('invitations.accept');
-    Route::post('invitations/{invitation}/decline', [TeamInvitationController::class, 'decline'])->name('invitations.decline');
+    $missingInvitation = function (\Illuminate\Http\Request $request) {
+        \Inertia\Inertia::flash('toast', ['type' => 'error', 'message' => __('This invitation is no longer valid or has been cancelled.')]);
+        
+        if ($user = $request->user()) {
+            if ($team = $user->currentTeam) {
+                return redirect()->route('dashboard', ['current_team' => $team->slug]);
+            }
+        }
+        
+        return redirect()->route('home');
+    };
+
+    Route::get('invitations/{invitation}', [TeamInvitationController::class, 'show'])
+        ->name('invitations.show')
+        ->missing($missingInvitation);
+
+    Route::post('invitations/{invitation}/accept', [TeamInvitationController::class, 'accept'])
+        ->name('invitations.accept')
+        ->missing($missingInvitation);
+
+    Route::post('invitations/{invitation}/decline', [TeamInvitationController::class, 'decline'])
+        ->name('invitations.decline')
+        ->missing($missingInvitation);
 });
 
 Route::middleware(['auth', 'verified'])->group(function () {

@@ -20,7 +20,7 @@ width: 100% !important;
 }
 
 .content-cell {
-padding: 32px !important;
+padding: 40px 24px !important;
 }
 }
 

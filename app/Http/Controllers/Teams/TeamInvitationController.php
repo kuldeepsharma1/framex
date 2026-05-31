@@ -36,12 +36,15 @@ class TeamInvitationController extends Controller
         ]);
 
         $existingUser = User::where('email', $invitation->email)->first();
+        $sendEmail = $request->boolean('send_email');
 
         if ($existingUser) {
-            $existingUser->notify(new TeamInvitationNotification($invitation));
+            $existingUser->notify(new TeamInvitationNotification($invitation, $sendEmail));
         } else {
-            Notification::route('mail', $invitation->email)
-                ->notify(new TeamInvitationNotification($invitation));
+            if ($sendEmail) {
+                Notification::route('mail', $invitation->email)
+                    ->notify(new TeamInvitationNotification($invitation, true));
+            }
         }
 
         Inertia::flash('toast', ['type' => 'success', 'message' => __('Invitation sent.')]);

@@ -20,6 +20,7 @@ class CreateTeamInvitationRequest extends FormRequest
         return [
             'email' => ['required', 'string', 'email', 'max:255', new UniqueTeamInvitation($this->route('team'))],
             'role' => ['required', 'string', Rule::enum(TeamRole::class)],
+            'send_email' => ['nullable', 'boolean'],
         ];
     }
 }

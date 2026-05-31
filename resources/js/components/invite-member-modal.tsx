@@ -2,6 +2,7 @@ import { Form } from '@inertiajs/react';
 import { useState } from 'react';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import {
     Dialog,
     DialogClose,
@@ -105,6 +106,22 @@ export default function InviteMemberModal({
                                         </SelectContent>
                                     </Select>
                                     <InputError message={errors.role} />
+                                </div>
+
+                                <div className="flex items-center space-x-3 pt-2">
+                                    <Switch
+                                        id="send_email"
+                                        name="send_email"
+                                        value="true"
+                                        defaultChecked
+                                        data-test="invite-send-email"
+                                    />
+                                    <div className="grid gap-1.5 leading-none">
+                                        <Label htmlFor="send_email" className="font-medium">Send email invitation</Label>
+                                        <p className="text-[0.8rem] text-muted-foreground">
+                                            Turn off to invite without sending an email notification.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
 
