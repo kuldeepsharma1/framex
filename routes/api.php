@@ -26,8 +26,20 @@ Route::prefix('v1')
         Route::post('/teams/members/invite', [TeamApiController::class, 'invite']);
         Route::get('/activity', [TeamApiController::class, 'activity']);
 
-        // CRUD API Resources
-        Route::apiResource('blogs', BlogApiController::class)->parameters(['blogs' => 'blog:slug']);
-        Route::apiResource('categories', CategoryApiController::class)->parameters(['categories' => 'category:slug']);
-        Route::apiResource('tags', TagApiController::class)->parameters(['tags' => 'tag:slug']);
+
+    });
+
+Route::prefix('v1')
+    ->as('api.v1.')
+    ->middleware(['auth:sanctum', 'api.team', 'api.log'])
+    ->group(function () {
+
+        Route::apiResource('blogs', BlogApiController::class)
+            ->parameters(['blogs' => 'blog:slug']);
+
+        Route::apiResource('categories', CategoryApiController::class)
+            ->parameters(['categories' => 'category:slug']);
+
+        Route::apiResource('tags', TagApiController::class)
+            ->parameters(['tags' => 'tag:slug']);
     });
