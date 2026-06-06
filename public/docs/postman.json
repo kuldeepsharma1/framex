@@ -1,0 +1,105 @@
+{
+  "info": {
+    "name": "FrameX API Collection",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "User Profile",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          }
+        ],
+        "url": {
+          "raw": "{{BASE_URL}}/user",
+          "host": ["{{BASE_URL}}"],
+          "path": ["user"]
+        }
+      }
+    },
+    {
+      "name": "Get Scoped Team",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          }
+        ],
+        "url": {
+          "raw": "{{BASE_URL}}/teams",
+          "host": ["{{BASE_URL}}"],
+          "path": ["teams"]
+        }
+      }
+    },
+    {
+      "name": "List Blogs",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          }
+        ],
+        "url": {
+          "raw": "{{BASE_URL}}/blogs",
+          "host": ["{{BASE_URL}}"],
+          "path": ["blogs"]
+        }
+      }
+    },
+    {
+      "name": "Create Blog Post",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"API Enabled Blog Post\",\n  \"excerpt\": \"An article published programmatically via the developer API.\",\n  \"content\": \"This blog post was created by our CI/CD runner using a team-scoped personal access token.\",\n  \"is_published\": true\n}"
+        },
+        "url": {
+          "raw": "{{BASE_URL}}/blogs",
+          "host": ["{{BASE_URL}}"],
+          "path": ["blogs"]
+        }
+      }
+    }
+  ],
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [""]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "key": "BASE_URL",
+      "value": "https://framex.hytek.org.in/api/v1",
+      "type": "string"
+    },
+    {
+      "key": "TOKEN",
+      "value": "framex_live_YOUR_TOKEN_HERE",
+      "type": "string"
+    }
+  ]
+}

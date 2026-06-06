@@ -26,6 +26,11 @@ return Application::configure(basePath: dirname(__DIR__))
             AddLinkHeadersForPreloadedAssets::class,
             SetTeamUrlDefaults::class,
         ]);
+
+        $middleware->alias([
+            'api.team' => \App\Http\Middleware\TeamScopedApiTokenMiddleware::class,
+            'api.log' => \App\Http\Middleware\LogTokenActivity::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->shouldRenderJsonWhen(

@@ -1,11 +1,17 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/react-starter-kit",
+    "name": "hytek/framex",
     "type": "project",
-    "description": "The skeleton application for the Laravel framework.",
+    "description": "FrameX is a production-ready Laravel starter kit featuring Inertia, TypeScript, authentication, billing, real-time features, testing, and modern developer tooling.",
     "keywords": [
+        "framex",
         "laravel",
-        "framework"
+        "starter-kit",
+        "saas",
+        "inertia",
+        "typescript",
+        "reverb",
+        "cashier"
     ],
     "license": "MIT",
     "require": {

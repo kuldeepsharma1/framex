@@ -10,6 +10,17 @@ import {
     Hash, ChevronRight, LayoutGrid
 } from 'lucide-react';
 import { useState } from 'react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 const PALETTE = [
     { hex: '#6366f1', label: 'Indigo' },
@@ -59,12 +70,6 @@ function CategoryCard({
     tp: string;
     onEdit: (cat: any) => void;
 }) {
-    const handleDelete = () => {
-        if (confirm(`Delete "${cat.name}"? All posts will become uncategorized.`)) {
-            router.delete(`${tp}/manage/categories/${cat.slug}`);
-        }
-    };
-
     return (
         <div
             className="group relative flex items-center gap-4 rounded-2xl border bg-card p-4 shadow-sm hover:shadow-md transition-all duration-200"
@@ -109,18 +114,39 @@ function CategoryCard({
                 </Link>
                 <button
                     onClick={() => onEdit(cat)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
                     title="Edit"
                 >
                     <Pencil className="h-3.5 w-3.5" />
                 </button>
-                <button
-                    onClick={handleDelete}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                    title="Delete"
-                >
-                    <Trash2 className="h-3.5 w-3.5" />
-                </button>
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <button
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
+                            title="Delete"
+                        >
+                            <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Category?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the category "{cat.name}". All associated posts will become uncategorized.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                                variant={'destructive'}
+                                onClick={() => router.delete(`${tp}/manage/categories/${cat.slug}`)}
+                                className="bg-destructive cursor-pointer text-white hover:bg-destructive/90"
+                            >
+                                Delete
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </div>
     );

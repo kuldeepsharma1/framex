@@ -1,0 +1,47 @@
+{
+  "name": "FrameX API",
+  "version": "1",
+  "items": [
+    {
+      "type": "http",
+      "name": "Get User Profile",
+      "seq": 1,
+      "request": {
+        "url": "{{BASE_URL}}/user",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          }
+        ]
+      }
+    },
+    {
+      "type": "http",
+      "name": "List Blogs",
+      "seq": 2,
+      "request": {
+        "url": "{{BASE_URL}}/blogs",
+        "method": "GET",
+        "headers": [
+          {
+            "name": "Authorization",
+            "value": "Bearer {{TOKEN}}"
+          }
+        ]
+      }
+    }
+  ],
+  "environments": [],
+  "variables": [
+    {
+      "name": "BASE_URL",
+      "value": "https://framex.hytek.org.in/api/v1"
+    },
+    {
+      "name": "TOKEN",
+      "value": "framex_live_YOUR_TOKEN_HERE"
+    }
+  ]
+}

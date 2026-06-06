@@ -1,0 +1,377 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "FrameX API",
+    "version": "1.0.0",
+    "description": "Enterprise API for programmatically managing FrameX blogs, categories, tags, and teams."
+  },
+  "servers": [
+    {
+      "url": "https://framex.hytek.org.in/api/v1",
+      "description": "Production API Server"
+    },
+    {
+      "url": "http://localhost/api/v1",
+      "description": "Local Development Server"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Sanctum Token",
+        "description": "FRAMEX API Secret Key (e.g. framex_live_...)"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/user": {
+      "get": {
+        "summary": "Get authenticated user",
+        "description": "Retrieve current authenticated user details and active token configuration.",
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of user profile"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          }
+        }
+      }
+    },
+    "/teams": {
+      "get": {
+        "summary": "Get team details",
+        "description": "Retrieve information about the team associated with the active token.",
+        "responses": {
+          "200": {
+            "description": "Successful retrieval of team details"
+          },
+          "403": {
+            "description": "Unauthorized scope"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update team settings",
+        "description": "Rename the team associated with the token.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Team updated successfully"
+          }
+        }
+      }
+    },
+    "/teams/members": {
+      "get": {
+        "summary": "List team members and invitations",
+        "description": "Retrieve members and active pending invitations for the scoped team.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/teams/members/invite": {
+      "post": {
+        "summary": "Invite team member",
+        "description": "Send an email invitation for a new member to join the team.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "admin",
+                      "member"
+                    ]
+                  }
+                },
+                "required": [
+                  "email",
+                  "role"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Invitation sent"
+          }
+        }
+      }
+    },
+    "/activity": {
+      "get": {
+        "summary": "Get activity log",
+        "description": "Retrieve audit logs for the current team.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/blogs": {
+      "get": {
+        "summary": "List all blog posts",
+        "description": "Retrieve all blog posts scoped to the token's team.",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create blog post",
+        "description": "Create a new blog post in the team.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "excerpt": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "is_published": {
+                    "type": "boolean"
+                  },
+                  "category_id": {
+                    "type": "integer"
+                  },
+                  "tag_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "required": [
+                  "title"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/blogs/{slug}": {
+      "get": {
+        "summary": "Get specific blog post",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update blog post",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "excerpt": {
+                    "type": "string"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "is_published": {
+                    "type": "boolean"
+                  },
+                  "category_id": {
+                    "type": "integer"
+                  },
+                  "tag_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "integer"
+                    }
+                  }
+                },
+                "required": [
+                  "title"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete blog post",
+        "parameters": [
+          {
+            "name": "slug",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deleted successfully"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "summary": "List categories",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create category",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "color"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    },
+    "/tags": {
+      "get": {
+        "summary": "List tags",
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create tag",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          }
+        }
+      }
+    }
+  }
+}

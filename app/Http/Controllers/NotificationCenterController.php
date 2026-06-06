@@ -19,7 +19,7 @@ class NotificationCenterController extends Controller
             ->limit(30)
             ->get();
 
-        $dbNotifications = $dbNotificationsCollection->toBase()->map(fn ($notification) => [
+        $dbNotifications = $dbNotificationsCollection->toBase()->map(fn($notification) => [
             'id' => $notification->id,
             'title' => $notification->data['title'] ?? 'Notification',
             'body' => $notification->data['body'] ?? '',
@@ -30,8 +30,8 @@ class NotificationCenterController extends Controller
 
         // 2. Fetch pending invitations for the user's email to show dynamically (if not already represented as a db notification)
         $dbNotificationInvitationIds = $dbNotificationsCollection
-            ->filter(fn ($n) => $n->type === \App\Notifications\Teams\TeamInvitation::class || isset($n->data['invitation_id']))
-            ->map(fn ($n) => $n->data['invitation_id'] ?? null)
+            ->filter(fn($n) => $n->type === \App\Notifications\Teams\TeamInvitation::class || isset($n->data['invitation_id']))
+            ->map(fn($n) => $n->data['invitation_id'] ?? null)
             ->filter()
             ->toArray();
 
@@ -42,7 +42,7 @@ class NotificationCenterController extends Controller
             ->with(['team', 'inviter'])
             ->get()
             ->toBase()
-            ->map(fn ($invitation) => [
+            ->map(fn($invitation) => [
                 'id' => 'invitation-' . $invitation->id,
                 'title' => __('Workspace Invitation'),
                 'body' => __(':inviterName has invited you to join the :teamName team.', [
@@ -62,9 +62,29 @@ class NotificationCenterController extends Controller
         ]);
     }
 
+    public function markRead(Request $request, string $notificationId): RedirectResponse
+    {
+        $notification = $request->user()
+            ->notifications()
+            ->where('id', $notificationId)
+            ->firstOrFail();
+
+        $notification->markAsRead();
+
+        if ($request->filled('redirect_url')) {
+            return redirect($request->input('redirect_url'));
+        }
+
+        return back();
+    }
+
     public function markAllRead(Request $request): RedirectResponse
     {
-        $request->user()->unreadNotifications->markAsRead();
+        $request->user()
+            ->unreadNotifications()
+            ->update([
+                'read_at' => now(),
+            ]);
 
         return back();
     }

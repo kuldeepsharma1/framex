@@ -17,7 +17,7 @@ class BlogController extends Controller
     public function publicIndex(Request $request)
     {
         $query = Blog::query()->where('is_published', true)
-            ->with(['user', 'category', 'tags'])
+            ->with(['user' => fn ($q) => $q->select('id', 'name', 'email'), 'category', 'tags'])
             ->latest('published_at');
 
         if ($request->filled('category')) {
@@ -37,7 +37,7 @@ class BlogController extends Controller
     public function publicShow(string $slug)
     {
         $blog = Blog::query()->where('slug', $slug)->where('is_published', true)
-            ->with(['user', 'category', 'tags'])
+            ->with(['user' => fn ($q) => $q->select('id', 'name', 'email'), 'category', 'tags'])
             ->firstOrFail();
 
         $related = Blog::query()->where('is_published', true)
@@ -54,7 +54,7 @@ class BlogController extends Controller
     public function index()
     {
         $blogs = Blog::query()->where('team_id', Auth::user()->current_team_id)
-            ->with(['user', 'category', 'tags'])
+            ->with(['user' => fn ($q) => $q->select('id', 'name', 'email'), 'category', 'tags'])
             ->latest()
             ->paginate(15);
             
@@ -117,7 +117,7 @@ class BlogController extends Controller
     {
         Gate::authorize('view', $blog);
 
-        $blog->load(['user', 'category', 'tags']);
+        $blog->load(['user' => fn ($q) => $q->select('id', 'name', 'email'), 'category', 'tags']);
         
         return Inertia::render('manage/blogs/show', ['blog' => $blog]);
     }

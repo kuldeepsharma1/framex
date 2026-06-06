@@ -32,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->configureDefaults();
         $this->registerActivityLogListeners();
+        
+        \Laravel\Sanctum\Sanctum::usePersonalAccessTokenModel(\App\Models\PersonalAccessToken::class);
     }
 
     /**

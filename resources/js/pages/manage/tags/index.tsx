@@ -9,6 +9,17 @@ import {
     Save, X, Loader2, Hash, Check, BookOpen, ChevronRight, Search
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from '@/components/ui/alert-dialog';
 
 function TagPill({
     tag,
@@ -19,12 +30,6 @@ function TagPill({
     tp: string;
     onEdit: (tag: any) => void;
 }) {
-    const handleDelete = () => {
-        if (confirm(`Delete tag "#${tag.name}"?`)) {
-            router.delete(`${tp}/manage/tags/${tag.slug}`);
-        }
-    };
-
     return (
         <div className="group relative flex items-center gap-3 rounded-2xl border bg-card px-4 py-3 shadow-sm hover:shadow-md transition-all duration-200">
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary/10">
@@ -54,18 +59,39 @@ function TagPill({
                 </Link>
                 <button
                     onClick={() => onEdit(tag)}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors cursor-pointer"
                     title="Edit"
                 >
                     <Pencil className="h-3.5 w-3.5" />
                 </button>
-                <button
-                    onClick={handleDelete}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors"
-                    title="Delete"
-                >
-                    <Trash2 className="h-3.5 w-3.5" />
-                </button>
+                <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                        <button
+                            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-colors cursor-pointer"
+                            title="Delete"
+                        >
+                            <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Tag?</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                This action cannot be undone. This will permanently delete the tag "#{tag.name}".
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogCancel className="cursor-pointer">Cancel</AlertDialogCancel>
+                            <AlertDialogAction
+                                variant={'destructive'}
+                                onClick={() => router.delete(`${tp}/manage/tags/${tag.slug}`)}
+                                className="bg-destructive cursor-pointer text-white hover:bg-destructive/90"
+                            >
+                                Delete
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </div>
     );

@@ -1,4 +1,4 @@
-import { Head, Link, router } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import { Bell, BellOff, Check, UserPlus } from 'lucide-react';
 import { EmptyState } from '@/components/shared/empty-state';
 import { FadeIn } from '@/components/shared/motion';
@@ -27,7 +27,20 @@ export default function NotificationsIndex({ notifications }: Props) {
                 <FadeIn>
                     <PageHeader title="Notifications" description={`${unread.length} unread`}>
                         {unread.length > 0 && (
-                            <Button variant="outline" size="sm" onClick={() => router.post('/notifications/read')}>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() =>
+                                    router.post(
+                                        '/notifications/read-all',
+                                        {},
+                                        {
+                                            only: ['notifications', 'unreadNotificationsCount'],
+                                            preserveScroll: true,
+                                        }
+                                    )
+                                }
+                            >
                                 <Check className="mr-2 h-4 w-4" />Mark all read
                             </Button>
                         )}
@@ -38,7 +51,7 @@ export default function NotificationsIndex({ notifications }: Props) {
                         <div className="space-y-2">
                             {notifications.map((n) => {
                                 const isInvitation = n.title.toLowerCase().includes('invitation');
-                                
+
                                 return (
                                     <div
                                         key={n.id}
@@ -71,15 +84,50 @@ export default function NotificationsIndex({ notifications }: Props) {
                                             {n.body && <p className="mt-0.5 text-sm text-muted-foreground">{n.body}</p>}
                                             {n.action_url && (
                                                 <div className="mt-3">
-                                                    <Button size="sm" variant={isInvitation ? 'default' : 'outline'} asChild>
-                                                        <Link href={n.action_url}>
-                                                            {isInvitation ? 'Accept Invitation' : 'View'}
-                                                        </Link>
+                                                    <Button
+                                                        size="sm"
+                                                        variant={isInvitation ? 'default' : 'outline'}
+                                                        onClick={() => {
+                                                            if (!n.read_at && !n.id.startsWith('invitation-')) {
+                                                                router.post(
+                                                                    `/notifications/${n.id}/read`,
+                                                                    { redirect_url: n.action_url },
+                                                                    {
+                                                                        preserveScroll: true,
+                                                                    }
+                                                                );
+                                                            } else if (n.action_url) {
+                                                                router.visit(n.action_url);
+                                                            }
+                                                        }}
+                                                    >
+                                                        {isInvitation ? 'Accept Invitation' : 'View'}
                                                     </Button>
                                                 </div>
                                             )}
                                             <p className="mt-1 text-xs text-muted-foreground/70">{n.created_at}</p>
                                         </div>
+                                        {!n.read_at && !n.id.startsWith('invitation-') && (
+                                            <Button
+                                                variant="ghost"
+                                                size="icon"
+                                                className="h-8 w-8 shrink-0 rounded-lg text-muted-foreground hover:bg-muted hover:text-foreground"
+                                                onClick={() => {
+                                                    router.post(
+                                                        `/notifications/${n.id}/read`,
+                                                        {},
+                                                        {
+                                                            only: ['notifications', 'unreadNotificationsCount'],
+                                                            preserveScroll: true,
+                                                        }
+                                                    );
+                                                }}
+                                                title="Mark as read"
+                                            >
+                                                <Check className="h-4 w-4" />
+                                                <span className="sr-only">Mark as read</span>
+                                            </Button>
+                                        )}
                                     </div>
                                 );
                             })}
